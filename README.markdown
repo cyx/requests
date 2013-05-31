@@ -1,10 +1,8 @@
-requests
-========
+# requests
 
 Requests: HTTP for Humans (Ruby port)
 
-Description
------------
+## Description
 
 Because Requests for Python is awesome
 
