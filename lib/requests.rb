@@ -1,13 +1,11 @@
 require 'json'
 require 'net/http'
-require 'uri'
 require 'openssl'
+require 'uri'
 
 module Requests
-  class << self
-    attr_accessor :ca_file
-  end
-  @ca_file = File.expand_path('../cacert.pem', __FILE__)
+  CA_FILE = ENV.fetch('REQUESTS_CA_FILE',
+                      File.expand_path('../cacert.pem', __FILE__))
 
   def self.request(method, url,
     headers: {},
@@ -38,7 +36,7 @@ private
     if uri.scheme == 'https'
       { use_ssl: true,
         verify_mode: OpenSSL::SSL::VERIFY_PEER,
-        ca_file: ca_file
+        ca_file: CA_FILE
       }
     end
   end
