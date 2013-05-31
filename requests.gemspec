@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.description = "Because Requests for Python is awesome"
   s.authors = ["Cyril David"]
   s.email= ["cyx@cyx.is"]
-  s.homepage = "http://cyx.is/"
+  s.homepage = "http://github.com/cyx/requests"
   s.files = Dir[
     "LICENSE",
     "README",
