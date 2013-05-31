@@ -1,4 +1,4 @@
-require File.expand_path('../lib/requests', File.dirname(__FILE__))
+require 'requests/sugar'
 
 test "basic auth" do
   r = Requests.get("http://httpbin.org/basic-auth/u/p", auth: ['u', 'p'])

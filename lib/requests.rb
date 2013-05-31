@@ -1,31 +1,13 @@
 require 'json'
 require 'net/http'
 require 'uri'
+require 'openssl'
 
 module Requests
-  def self.get(url, **kwargs)
-    request('GET', url, **kwargs)
+  class << self
+    attr_accessor :ca_file
   end
-
-  def self.post(url, data: nil, **kwargs)
-    request('POST', url, data: data, **kwargs)
-  end
-
-  def self.put(url, data: nil, **kwargs)
-    request('PUT', url, data: data, **kwargs)
-  end
-
-  def self.delete(url, **kwargs)
-    request('DELETE', url, **kwargs)
-  end
-
-  def self.head(url, **kwargs)
-    request('HEAD', url, **kwargs)
-  end
-
-  def self.options(url, **kwargs)
-    request('OPTIONS', url, **kwargs)
-  end
+  @ca_file = File.expand_path('../cacert.pem', __FILE__)
 
   def self.request(method, url,
     headers: {},
@@ -40,7 +22,7 @@ module Requests
 
     _basic_auth(headers, *auth) if auth
 
-    response = Net::HTTP.start(uri.host, uri.port) do |http|
+    response = Net::HTTP.start(uri.host, uri.port, opts(uri)) do |http|
       http.send_request(method, uri, body, headers)
     end
 
@@ -52,6 +34,15 @@ module Requests
   end
 
 private
+  def self.opts(uri)
+    if uri.scheme == 'https'
+      { use_ssl: true,
+        verify_mode: OpenSSL::SSL::VERIFY_PEER,
+        ca_file: ca_file
+      }
+    end
+  end
+
   def self._basic_auth(headers, user, pass)
     headers['Authorization'] = 'Basic ' + ["#{user}:#{pass}"].pack('m0')
   end
