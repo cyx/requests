@@ -58,27 +58,27 @@ private
   end
 
   class Response
-    attr :status_code
+    attr :status
     attr :headers
-    attr :content
+    attr :body
 
-    def initialize(status_code, headers, content)
-      @status_code, @headers, @content = Integer(status_code), headers, content
+    def initialize(status, headers, body)
+      @status, @headers, @body = Integer(status), headers, body
     end
 
     # TODO Verify that JSON can parse data without encoding stuff
     def json
-      JSON.parse(@content)
+      JSON.parse(@body)
     end
 
     # TODO Verify that this is based on content-type header
     def encoding
-      @content.encoding
+      @body.encoding
     end
 
     # TODO this will probably do something related to encoding if necessary
     def text
-      @content
+      @body
     end
   end
 end

@@ -10,7 +10,7 @@ end
 test 'GET' do
   r = Requests.get('http://httpbin.org/get', params: { foo: 'bar' })
 
-  assert_equal 200, r.status_code
+  assert_equal 200, r.status
   assert_equal ['application/json'], r.headers['content-type']
   assert_equal 'UTF-8', r.encoding.to_s
 
@@ -18,9 +18,9 @@ test 'GET' do
 end
 
 test 'POST data' do
-  r = Requests.post('http://httpbin.org/post', data: '{ 'plan': 'test' }')
+  r = Requests.post('http://httpbin.org/post', data: '{ "plan": "test" }')
 
-  assert_equal 200, r.status_code
+  assert_equal 200, r.status
   assert_equal ['application/json'], r.headers['content-type']
   assert_equal 'UTF-8', r.encoding.to_s
 
@@ -41,7 +41,7 @@ test 'POST params' do
 
   r = Requests.post('http://httpbin.org/post', data: payload)
 
-  assert_equal 200, r.status_code
+  assert_equal 200, r.status
 
   form = r.json['form']
 
