@@ -18,9 +18,9 @@ module Requests
     uri = URI.parse(url)
     uri.query = URI.encode_www_form(params) if params
 
-    body = _encode_params(headers: headers, data: data) if data
+    body = process_params(headers: headers, data: data) if data
 
-    _basic_auth(headers, *auth) if auth
+    basic_auth(headers, *auth) if auth
 
     response = Net::HTTP.start(uri.host, uri.port, opts(uri)) do |http|
       http.send_request(method, uri, body, headers)
@@ -43,11 +43,11 @@ private
     end
   end
 
-  def self._basic_auth(headers, user, pass)
+  def self.basic_auth(headers, user, pass)
     headers['Authorization'] = 'Basic ' + ["#{user}:#{pass}"].pack('m0')
   end
 
-  def self._encode_params(headers: headers, data: data)
+  def self.process_params(headers: nil, data: nil)
     if not data.kind_of?(Enumerable)
       data
     else
