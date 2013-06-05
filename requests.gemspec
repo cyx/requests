@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = "requests"
-  s.version = "0.0.5"
+  s.version = "0.0.6"
   s.summary = "Requests: HTTP for Humans (Ruby port)"
   s.description = "Because Requests for Python is awesome"
   s.authors = ["Cyril David"]
@@ -12,7 +12,8 @@ Gem::Specification.new do |s|
     "LICENSE",
     "README",
     "makefile",
-    "lib/*",
+    "lib/**/*.rb",
+    "lib/cacert.pem",
     "tests/*.rb",
     "*.gemspec"
   ]
