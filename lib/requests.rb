@@ -16,7 +16,7 @@ module Requests
     auth: nil)
 
     uri = URI.parse(url)
-    uri.query = URI.encode_www_form(params) if params
+    uri.query = encode_www_form(params) if params
 
     body = process_params(headers: headers, data: data) if data
 
@@ -34,6 +34,10 @@ module Requests
   end
 
 private
+  def self.encode_www_form(params)
+    URI.encode_www_form(params)
+  end
+
   def self.opts(uri)
     if uri.scheme == 'https'
       { use_ssl: true,
@@ -53,7 +57,7 @@ private
     else
       headers['content-type'] = 'application/x-www-form-urlencoded'
 
-      URI.encode_www_form(data)
+      encode_www_form(data)
     end
   end
 
