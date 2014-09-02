@@ -49,3 +49,11 @@ test 'POST params' do
   assert_equal form['b'], '3'
   assert_equal form['c'], '4'
 end
+
+test 'Error' do
+  begin
+    Requests.post('http://httpbin.org/something')
+  rescue Requests::Error => e
+    assert_equal Net::HTTPNotFound, e.http_error.class
+  end
+end
