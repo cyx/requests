@@ -18,13 +18,13 @@ test 'GET' do
 end
 
 test 'POST data' do
-  r = Requests.post('http://httpbin.org/post', data: '{ "plan": "test" }')
+  r = Requests.post('http://httpbin.org/post', data: { "plan" => "test" })
 
   assert_equal 200, r.status
   assert_equal ['application/json'], r.headers['content-type']
   assert_equal 'UTF-8', r.encoding.to_s
 
-  assert(r.json['json']  && r.json['json'] == { 'plan' => 'test' })
+  assert(r.json['form'] && r.json['form'] == { 'plan' => 'test' })
 end
 
 test 'PUT data' do
