@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = "requests"
-  s.version = "0.0.6"
+  s.version = "1.0.0"
   s.summary = "Requests: HTTP for Humans (Ruby port)"
   s.description = "Because Requests for Python is awesome"
   s.authors = ["Cyril David"]
