@@ -5,11 +5,12 @@ require 'uri'
 
 module Requests
   class Error < StandardError
-    attr_reader :http_error
+    attr_reader :response
 
-    def initialize(http_error)
-      super(http_error.message)
-      @http_error = http_error
+    def initialize(response)
+      super(response.message)
+
+      @response = response
     end
   end
 
