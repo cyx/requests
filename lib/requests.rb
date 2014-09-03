@@ -4,7 +4,14 @@ require 'openssl'
 require 'uri'
 
 module Requests
-  Error = Class.new(StandardError)
+  class Error < StandardError
+    attr_reader :http_error
+
+    def initialize(http_error)
+      super(http_error.message)
+      @http_error = http_error
+    end
+  end
 
   CA_FILE = ENV.fetch('REQUESTS_CA_FILE',
                       File.expand_path('../cacert.pem', __FILE__))
@@ -29,7 +36,7 @@ module Requests
     if response.is_a?(Net::HTTPSuccess)
       Response.new(response.code, response.to_hash, response.body)
     else
-      raise Error, response.inspect
+      raise Error, response
     end
   end
 

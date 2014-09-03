@@ -18,13 +18,13 @@ test 'GET' do
 end
 
 test 'POST data' do
-  r = Requests.post('http://httpbin.org/post', data: '{ "plan": "test" }')
+  r = Requests.post('http://httpbin.org/post', data: { "plan" => "test" })
 
   assert_equal 200, r.status
   assert_equal ['application/json'], r.headers['content-type']
   assert_equal 'UTF-8', r.encoding.to_s
 
-  assert(r.json['json']  && r.json['json'] == { 'plan' => 'test' })
+  assert(r.json['form'] && r.json['form'] == { 'plan' => 'test' })
 end
 
 test 'PUT data' do
@@ -48,4 +48,12 @@ test 'POST params' do
   assert_equal form['a[]'], ['a1', 'a2']
   assert_equal form['b'], '3'
   assert_equal form['c'], '4'
+end
+
+test 'Error' do
+  begin
+    Requests.post('http://httpbin.org/something')
+  rescue Requests::Error => e
+    assert_equal Net::HTTPNotFound, e.http_error.class
+  end
 end
