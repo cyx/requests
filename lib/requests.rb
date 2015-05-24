@@ -21,7 +21,8 @@ module Requests
     headers: {},
     data: nil,
     params: nil,
-    auth: nil)
+    auth: nil,
+    proxy: nil)
 
     uri = URI.parse(url)
     uri.query = encode_www_form(params) if params
@@ -30,7 +31,8 @@ module Requests
 
     basic_auth(headers, *auth) if auth
 
-    response = Net::HTTP.start(uri.host, uri.port, opts(uri)) do |http|
+    proxy = proxy.to_h.values_at(:host, :port, :user, :password)
+    response = Net::HTTP.start(uri.host, uri.port, *proxy, opts(uri)) do |http|
       http.send_request(method, uri, body, headers)
     end
 
