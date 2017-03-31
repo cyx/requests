@@ -57,3 +57,37 @@ test 'Error' do
     assert_equal Net::HTTPNotFound, e.response.class
   end
 end
+
+test 'read timeout' do
+  begin
+    Requests.get('http://httpbin.org:10000', options: { read_timeout: 1 })
+  rescue => err
+    assert err.kind_of?(Errno::ECONNREFUSED)
+  end
+end
+
+test 'read timeout not failing' do
+  begin
+    Requests.get('http://httpbin.org/get', options: { read_timeout: 30 })
+  rescue => err
+    flunk(err)
+  end
+end
+
+test 'open timeout' do
+  begin
+    Requests.get('http://httpbin.org:10000', options: { open_timeout: 1 })
+  rescue => err
+    assert err.kind_of?(Errno::ECONNREFUSED)
+  else
+    flunk("expected exception")
+  end
+end
+
+test 'open timeout not failing' do
+  begin
+    Requests.get('http://httpbin.org/get', options: { open_timeout: 30 })
+  rescue => err
+    flunk(err)
+  end
+end

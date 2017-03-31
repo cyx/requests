@@ -22,7 +22,8 @@ module Requests
     data: nil,
     params: nil,
     auth: nil,
-    proxy: nil)
+    proxy: nil,
+    options: {})
 
     uri = URI.parse(url)
     uri.query = encode_www_form(params) if params
@@ -32,7 +33,7 @@ module Requests
     basic_auth(headers, *auth) if auth
 
     proxy = proxy.to_h.values_at(:host, :port, :user, :password)
-    response = Net::HTTP.start(uri.host, uri.port, *proxy, opts(uri)) do |http|
+    response = Net::HTTP.start(uri.host, uri.port, *proxy, opts(uri, options)) do |http|
       http.send_request(method, uri, body, headers)
     end
 
@@ -48,11 +49,13 @@ private
     URI.encode_www_form(params)
   end
 
-  def self.opts(uri)
+  def self.opts(uri, options)
     if uri.scheme == 'https'
       { use_ssl: true,
         verify_mode: OpenSSL::SSL::VERIFY_PEER,
-        ca_file: CA_FILE
+        ca_file: CA_FILE,
+        read_timeout: options[:read_timeout],
+        open_timeout: options[:open_timeout],
       }
     end
   end
