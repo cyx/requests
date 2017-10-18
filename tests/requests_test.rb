@@ -52,9 +52,10 @@ end
 
 test 'Error' do
   begin
-    Requests.post('http://httpbin.org/something')
+    r = Requests.post('http://httpbin.org/something')
+    r.raise_for_status
   rescue Requests::Error => e
-    assert_equal Net::HTTPNotFound, e.response.class
+    assert_equal 'Client Error: 404 NOT FOUND', e.response
   end
 end
 

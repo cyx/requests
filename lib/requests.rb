@@ -8,7 +8,7 @@ module Requests
     attr_reader :response
 
     def initialize(response)
-      super(response.message)
+      super(response)
 
       @response = response
     end
@@ -37,11 +37,7 @@ module Requests
       http.send_request(method, uri, body, headers)
     end
 
-    if response.is_a?(Net::HTTPSuccess)
-      Response.new(response.code, response.to_hash, response.body)
-    else
-      raise Error, response
-    end
+    Response.new(response.code, response.message, response.to_hash, response.body)
   end
 
 private
@@ -76,11 +72,12 @@ private
 
   class Response
     attr :status
+    attr :message
     attr :headers
     attr :body
 
-    def initialize(status, headers, body)
-      @status, @headers, @body = Integer(status), headers, body
+    def initialize(status, message, headers, body)
+      @status, @message, @headers, @body = Integer(status), message, headers, body
     end
 
     # TODO Verify that JSON can parse data without encoding stuff
@@ -97,5 +94,24 @@ private
     def text
       @body
     end
+
+    def raise_for_status(status=nil)
+      if status == nil || @status == status
+        if @status < 300 && status != nil
+          err_msg = "%d %s" % [@status,@message]
+        elsif 300 <= @status && @status < 400
+          err_msg = "Redirection: %d %s" % [@status,@message]
+        elsif 400 <= @status && @status < 500
+          err_msg = "Client Error: %d %s" % [@status,@message]
+        elsif 500 <= @status && @status < 600
+          err_msg = "Server Error: %d %s" % [@status,@message]
+        end
+      end
+
+      if err_msg != nil
+        raise Error, err_msg
+      end
+    end
+
   end
 end
