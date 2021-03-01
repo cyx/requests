@@ -55,6 +55,10 @@ test 'Error' do
     Requests.post('http://httpbin.org/something')
   rescue Requests::Error => e
     assert_equal Net::HTTPNotFound, e.response.class
+
+    assert_equal Hash, e.headers.class
+    assert_equal String, e.body.class
+    assert_equal 404, e.status
   end
 end
 

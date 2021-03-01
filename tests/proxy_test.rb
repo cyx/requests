@@ -26,7 +26,7 @@ test 'request via proxy' do |proxy|
   assert_equal ['application/json'], r.headers['content-type']
   assert(r.json['args'] && r.json['args']['foo'] == 'bar')
 
-  assert_equal ["1.1 vegur, 1.1 0.0.0.0:#{port}"], r.headers['via']
+  assert_equal ["1.1 0.0.0.0:#{port}"], r.headers['via']
 
   proxy.shutdown
 end

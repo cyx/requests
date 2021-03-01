@@ -5,12 +5,15 @@ require 'uri'
 
 module Requests
   class Error < StandardError
-    attr_reader :response
+    attr_reader :response, :status, :headers, :body
 
     def initialize(response)
       super(response.message)
 
       @response = response
+      @status = Integer(response.code)
+      @headers = response.to_hash
+      @body = response.body
     end
   end
 
